@@ -1,0 +1,3 @@
+- hosts: vagrant
+  tasks:
+    - file: path=/tmp/ansible-test state=directory
