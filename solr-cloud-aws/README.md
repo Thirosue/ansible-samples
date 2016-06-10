@@ -35,3 +35,34 @@ http://[hostname]:8983/solr/admin/collections?action=CREATE&name=test&replicatio
 ```
 http://[hostname]:8983/solr/admin/collections?action=DELETE&name=test
 ```
+
+## add field type sample
+```
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-field-type" : {
+     "name":"myTxtField",
+     "class":"solr.TextField",
+     "positionIncrementGap":"100",
+     "analyzer" : {
+        "tokenizer":{
+           "class":"solr.JapaneseTokenizerFactory" }
+        }
+    }
+}' http://[hostname]:8983/solr/test/schema
+```
+
+## add field sample
+```
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-field":{
+     "name":"test_text",
+     "type":"myTxtField",
+     "indexed":true ,
+     "stored":true ,
+     "multiValued":true ,
+     "termOffsets":true ,
+     "termPositions":true ,
+     "termVectors":true
+  }
+}' http://[hostname]:8983/solr/test/schema
+```
