@@ -8,7 +8,7 @@
 
 ## provisioning
 ```sh
-ansible-playbook -i hosts --private-key=devenv-key.pem solr.yml -v
+ansible-playbook -i hosts --private-key=devenv-key.pem provisioning.yml -v
 ```
 
 ## start
