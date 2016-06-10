@@ -1,0 +1,55 @@
+- hosts: solr
+  become: yes
+  vars:
+    solr_version: 6.0.1
+    zookeeper_version: 3.4.8
+  tasks:
+    - name: telnet install
+      yum: name=telnet state=installed
+
+    - name: wget install
+      yum: name=wget state=installed
+
+    - name: jdk download
+      shell: 'wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.rpm'
+      when: install_skip is undefined
+
+    - name: jdk install
+      shell: rpm -ivh jdk-8u91-linux-x64.rpm
+      when: install_skip is undefined
+
+    - name: solr dowonload
+      get_url: url=http://archive.apache.org/dist/lucene/solr/{{solr_version}}/solr-{{solr_version}}.tgz dest=/opt/ mode=0755
+      when: install_skip is undefined
+
+    - name: solr unarchive
+      unarchive: src=/opt/solr-{{solr_version}}.tgz dest=/opt/ copy=no
+
+    - name: zookeeper dowonload
+      get_url: url=http://ftp.jaist.ac.jp/pub/apache/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz dest=/opt/ mode=0755
+      when: install_skip is undefined
+
+    - name: zookeeper unarchive
+      unarchive: src=/opt/zookeeper-{{zookeeper_version}}.tar.gz dest=/opt/ copy=no
+      when: install_skip is undefined
+
+    - name: create zookeeper data dir
+      file: path=/var/zookeeper state=directory owner=root
+
+    - name: create zookeeper log dir
+      file: path=/var/log/zookeeper state=directory owner=root
+
+    - name: write myid file
+      template: src=myid dest=/var/zookeeper
+
+    - name: setting zookeeper conf
+      template: src=zoo.cfg dest=/opt/zookeeper-{{zookeeper_version}}/conf/
+
+    - name: setting solr init
+      copy: src=solr dest=/opt/solr-{{solr_version}}/bin/
+
+    - name: setting solrconfig.xml
+      template: src=solrconfig.xml dest=/opt/solr-{{solr_version}}/server/solr/configsets/data_driven_schema_configs/conf/
+
+    - name: chown
+      shell: chown -R root:root /opt/

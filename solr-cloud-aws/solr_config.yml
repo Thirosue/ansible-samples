@@ -1,0 +1,8 @@
+- hosts: solr1
+  become: yes
+  vars:
+    solr_version: 6.0.1
+    zookeeper_version: 3.4.8
+  tasks:
+    - name: solr upconfig
+      shell: /opt/solr-{{solr_version}}/server/scripts/cloud-scripts/zkcli.sh -zkhost localhost:2181 -cmd upconfig -confdir /opt/solr-{{solr_version}}/server/solr/configsets/data_driven_schema_configs/conf/ -confname test

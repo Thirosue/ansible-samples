@@ -1,0 +1,19 @@
+- hosts: solr
+  become: yes
+  vars:
+    solr_version: 6.0.1
+    zookeeper_version: 3.4.8
+  tasks:
+    - name: zookeeper down
+      shell: /opt/zookeeper-{{zookeeper_version}}/bin/zkServer.sh stop
+      when: restart is defined
+
+    - name: zookeeper up
+      shell: /opt/zookeeper-{{zookeeper_version}}/bin/zkServer.sh start
+
+    - name: solr down
+      shell: /opt/solr-{{solr_version}}/bin/solr stop
+      when: restart is defined
+
+    - name: solr up
+      shell: /opt/solr-{{solr_version}}/bin/solr start -c -z 172.31.1.1:2181,172.31.1.2:2181
