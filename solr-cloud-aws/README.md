@@ -25,3 +25,13 @@ ansible-playbook -i hosts --private-key=devenv-key.pem up.yml --extra-vars 'rest
 ```sh
 ansible-playbook -i hosts --private-key=devenv-key.pem solr_config.yml -v
 ```
+
+## create collection
+```
+http://[hostname]:8983/solr/admin/collections?action=CREATE&name=test&replicationFactor=1&numShards=2&collection.configName=test
+```
+
+## delete collection
+```
+http://[hostname]:8983/solr/admin/collections?action=DELETE&name=test
+```
