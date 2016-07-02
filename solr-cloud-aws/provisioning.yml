@@ -51,5 +51,8 @@
     - name: setting solrconfig.xml
       template: src=solrconfig.xml dest=/opt/solr-{{solr_version}}/server/solr/configsets/data_driven_schema_configs/conf/
 
+    - name: add deta-import.xml
+      template: src=data-import.xml dest=/opt/solr-{{solr_version}}/server/solr/configsets/data_driven_schema_configs/conf/
+
     - name: chown
       shell: chown -R root:root /opt/

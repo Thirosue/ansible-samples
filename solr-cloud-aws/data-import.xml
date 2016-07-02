@@ -1,0 +1,5 @@
+ <dataConfig>
+     <document>
+       <entity name="sep" processor="SolrEntityProcessor" url="http://{{hostvars['solr1']['ansible_ssh_host']}}:8983/solr/test" query="*:*" fl="id" rows="1000" timeout="5" wt="xml"/>
+     </document>
+ </dataConfig>

@@ -615,4 +615,12 @@
         </arr>
 </requestHandler>
 
+ <lib dir="/opt/solr-{{solr_version}}/dist/" regex="solr-dataimporthandler-\d.*\.jar" />
+
+ <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler">
+   <lst name="defaults">
+     <str name="config">data-import.xml</str>
+   </lst>
+ </requestHandler>
+
 </config>
