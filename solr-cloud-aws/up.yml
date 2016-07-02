@@ -16,4 +16,4 @@
       when: restart is defined
 
     - name: solr up
-      shell: /opt/solr-{{solr_version}}/bin/solr start -c -z 172.31.1.1:2181,172.31.1.2:2181
+      shell: /opt/solr-{{solr_version}}/bin/solr start -c -z 172.31.18.161:2181,172.31.18.162:2181
