@@ -1,0 +1,47 @@
+---
+- hosts: aws
+  sudo: yes
+  vars:
+    work: "/home/ec2-user/work/"
+    libevent_version: "libevent-2.0.22-stable"    
+    repcached_version: "memcached-1.2.8-repcached-2.2.1"
+
+  tasks:
+    - file: path=work mode=0755 state=directory
+    - yum: name=telnet state=installed
+    - yum: name=gcc state=installed
+
+    - unarchive: src=download/{{libevent_version}}.tar.gz dest={{work}}
+    - command: "./configure"
+      args:
+        chdir: "{{ work }}{{libevent_version}}"
+    - command: "make"
+      args:
+        chdir: "{{work}}{{libevent_version}}"
+    - command: "make install"
+      args:
+        chdir: "{{work}}{{libevent_version}}"
+
+    - unarchive: src=download/{{repcached_version}}.tar.gz dest={{work}}
+    - command: "./configure --enable-replication --build=x86_64-unknown-linux-gnu"
+      args:
+        chdir: "{{work}}{{repcached_version}}"
+    - name: patch-repcached
+      copy: src=template/repcached.c dest={{work}}{{repcached_version}}/memcached.c
+    - command: "make"
+      args:
+        chdir: "{{work}}{{repcached_version}}"
+    - command: "make install"
+      args:
+        chdir: "{{work}}{{repcached_version}}"
+
+    - command: "useradd -M -s /sbin/nologin memcached"
+    - file: path=/var/run/memcached/ mode=0755 state=directory owner=memcached
+
+    - template: src=template/repcached dest=/etc/sysconfig/ mode=755
+      when: target == 1
+
+    - template: src=template/repcached dest=/etc/sysconfig/ mode=755
+      when: target == 2
+
+    - copy: src=init.d/repcached dest=/etc/init.d/ mode=755

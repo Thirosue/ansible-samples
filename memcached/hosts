@@ -1,0 +1,3 @@
+[aws]
+mem1 ansible_ssh_host=52.199.121.252 ansible_ssh_user=ec2-user target=1 target_ip=172.31.1.194
+mem2 ansible_ssh_host=52.197.161.15 ansible_ssh_user=ec2-user target=2 target_ip=172.31.9.10

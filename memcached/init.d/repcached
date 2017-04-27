@@ -1,0 +1,77 @@
+#!/bin/sh
+#
+# memcached - high-performance memory object caching system
+#
+# chkconfig: 345 55 45
+# description: memcached is a flexible memory object caching daemon.
+# processname: memcached
+# config: /etc/sysconfig/repcached
+# pidfile: /var/run/memcached/repcached.pid
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+PORT=11211
+USER=memcached
+MAXCONN=1024
+CACHESIZE=640
+OPTIONS=""
+REPHOST=127.0.0.1
+
+if [ -f /etc/sysconfig/repcached ]; then
+    . /etc/sysconfig/repcached
+fi
+
+PROG="repcached(memcached)"
+EXEC=/usr/local/bin/memcached
+PIDFILE=/var/run/memcached/repcached.pid
+LOCKFILE=/var/lock/subsys/repcached
+RETVAL=0
+
+start () {
+    echo -n $"Starting $PROG: "
+    # insure that /var/run/memcached has proper permissions
+    chown $USER /var/run/memcached
+    daemon $EXEC -d -x $REPHOST -p $PORT -u $USER -m $CACHESIZE -c $MAXCONN -P $PIDFILE $OPTIONS
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $LOCKFILE
+}
+stop () {
+    echo -n $"Stopping $PROG: "
+    killproc -p $PIDFILE $EXEC
+    RETVAL=$?
+    echo
+    if [ $RETVAL -eq 0 ]; then
+        rm -f $LOCKFILE $PIDFILE
+    fi
+}
+restart () {
+    stop
+    start
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status -p $PIDFILE $PROG
+        ;;
+  restart|reload)
+        restart
+        ;;
+  condrestart)
+        [ -f $LOCKFILE ] && restart || :
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart|reload|condrestart}"
+        RETVAL=2
+esac
+
+exit $RETVAL
