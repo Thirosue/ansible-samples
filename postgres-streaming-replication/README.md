@@ -83,7 +83,7 @@ $ pg_ctl start -D /var/lib/pgsql/data/
 success logging
 
 ```
-$ bash-4.2$ tail -f /var/lib/pgsql/data/pg_log/postgresql-2017-05-01.log
+$ tail -f /var/lib/pgsql/data/pg_log/postgresql-2017-05-01.log
 
 28351 2017-05-01 08:34:43 EDTLOG:  received smart shutdown request
 28354 2017-05-01 08:34:43 EDTLOG:  shutting down
@@ -96,7 +96,7 @@ $ bash-4.2$ tail -f /var/lib/pgsql/data/pg_log/postgresql-2017-05-01.log
 28390 2017-05-01 08:35:49 EDTLOG:  streaming replication successfully connected to primary
 ```
 
-※以下はreplictionの確認
+※以下はreplicationの確認
 
 ## pg1(host) with postgres(user)
 
