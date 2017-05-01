@@ -1,0 +1,27 @@
+---
+- hosts: vagrant
+  sudo: yes
+  vars:
+
+  tasks:
+    - shell: sed -i -e "s/#PubkeyAuthentication/PubkeyAuthentication/g" /etc/ssh/sshd_config
+      when: init is undefined           
+ 
+    - yum: name={{item}} state=installed
+      with_items:
+        - postgresql-server
+        - postgresql-docs
+        - postgresql-devel
+        - postgresql-contrib
+
+    - shell: service postgresql initdb
+      when: init is undefined
+
+    - systemd: state=stopped name=firewalld
+    - systemd: state=restarted name=sshd
+
+    - template: src=template/postgresql.conf dest=/var/lib/pgsql/data/ mode=600 owner=postgres
+      when: target == 1
+
+    - copy: src=template/pg_hba.conf dest=/var/lib/pgsql/data/ mode=600 owner=postgres
+      when: target == 1

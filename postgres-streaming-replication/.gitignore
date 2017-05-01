@@ -1,0 +1,3 @@
+*.pem
+.vagrant
+ssh.config
