@@ -53,7 +53,7 @@ db sync (pg1 -> pg2)
 ```
 $ mv bk.tgz /var/lib/pgsql/
 $ tar xvfz bk.tgz
-$ rm -rf /var/lib/pgsql/
+$ rm -rf /var/lib/pgsql/data/
 $ mv bk /var/lib/pgsql/data/
 ```
 
