@@ -1,0 +1,43 @@
+- hosts: vagrant
+  become: yes
+  vars:
+    solr_version: 6.5.1
+    zookeeper_version: 3.4.10
+    jdk_version: 8u131
+    
+  tasks:
+    - name: jdk download
+      shell: 'wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{jdk_version}}-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-{{jdk_version}}-linux-x64.rpm'
+      when: install_skip is undefined
+
+    - name: jdk install
+      shell: rpm -ivh jdk-{{jdk_version}}-linux-x64.rpm
+      when: install_skip is undefined
+
+    - name: solr dowonload
+      get_url: url=http://archive.apache.org/dist/lucene/solr/{{solr_version}}/solr-{{solr_version}}.tgz dest=. mode=0755
+      when: install_skip is undefined
+
+    - name: solr unarchive
+      unarchive: src=solr-{{solr_version}}.tgz dest=/opt/ copy=no
+
+    - name: zookeeper dowonload
+      unarchive: src=download/zookeeper-{{zookeeper_version}}.tar.gz dest=/opt/ mode=0755 owner=root
+
+    - name: create zookeeper data dir
+      file: path=/var/zookeeper state=directory owner=root
+
+    - name: create zookeeper log dir
+      file: path=/var/log/zookeeper state=directory owner=root
+
+    - name: write myid file
+      template: src=template/zookeeper/myid dest=/var/zookeeper
+
+    - name: setting zookeeper conf
+      template: src=template/zookeeper/zoo.cfg dest=/opt/zookeeper-{{zookeeper_version}}/conf/
+
+    - name: setting solrconfig
+      unarchive: src=template/solr/conf.tgz dest=/opt/solr/
+
+    - name: setting jetty conf
+      copy: src=template/jetty/jetty.xml dest=/opt/solr-{{solr_version}}/server/etc/
