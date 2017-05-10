@@ -15,11 +15,10 @@
       when: install_skip is undefined
 
     - name: solr dowonload
-      get_url: url=http://archive.apache.org/dist/lucene/solr/{{solr_version}}/solr-{{solr_version}}.tgz dest=. mode=0755
-      when: install_skip is undefined
+      get_url: url=http://archive.apache.org/dist/lucene/solr/{{solr_version}}/solr-{{solr_version}}.tgz dest=/opt/ mode=0755
 
     - name: solr unarchive
-      unarchive: src=solr-{{solr_version}}.tgz dest=/opt/ copy=no
+      unarchive: src=/opt/solr-{{solr_version}}.tgz dest=/opt/ copy=no
 
     - name: zookeeper dowonload
       unarchive: src=download/zookeeper-{{zookeeper_version}}.tar.gz dest=/opt/ mode=0755 owner=root
