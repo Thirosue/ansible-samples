@@ -36,7 +36,7 @@
       template: src=template/zookeeper/zoo.cfg dest=/opt/zookeeper-{{zookeeper_version}}/conf/
 
     - name: setting solrconfig
-      unarchive: src=template/solr/conf.tgz dest=/opt/solr/
+      unarchive: src=template/solr/conf.tgz dest=/opt/solr-{{solr_version}}/
 
     - name: setting jetty conf
       copy: src=template/jetty/jetty.xml dest=/opt/solr-{{solr_version}}/server/etc/
