@@ -1,0 +1,22 @@
+- hosts: pool
+  sudo: yes
+  vars:
+
+  tasks:
+    - shell: yum install -y http://www.pgpool.net/yum/rpms/3.4/redhat/rhel-6-x86_64/pgpool-II-release-3.4-1.noarch.rpm
+      when: init is undefined
+
+    - yum: name={{item}} state=installed
+      with_items:
+        - pgpool-II-pg96
+        - pgpool-II-pg96-extensions
+
+    - file: path=/var/run/pgpool state=directory
+    - file: path=/var/log/pgpool state=directory
+    - file: path=/var/log/pgpool/trigger state=directory
+
+    - systemd: name=pgpool enabled=yes masked=no
+
+    - copy: src=template/pgpool.conf dest=/etc/pgpool-II
+    - copy: src=template/pcp.conf dest=/etc/pgpool-II
+    - copy: src=template/failover.sh dest=/usr/local/etc/ mode=755

@@ -1,12 +1,11 @@
----
 - hosts: vagrant
   sudo: yes
   vars:
 
   tasks:
     - shell: sed -i -e "s/#PubkeyAuthentication/PubkeyAuthentication/g" /etc/ssh/sshd_config
-      when: init is undefined           
- 
+      when: init is undefined
+
     - yum: name={{item}} state=installed
       with_items:
         - postgresql-server
@@ -25,3 +24,9 @@
 
     - copy: src=template/pg_hba.conf dest=/var/lib/pgsql/data/ mode=600 owner=postgres
       when: target == 1
+
+    - file: path=/var/log/pgpool state=directory owner=postgres
+    - file: path=/var/log/pgpool/trigger state=directory owner=postgres
+
+    - template: src=template/basebackup.sh dest=/var/lib/pgsql/data/ mode=755 owner=postgres
+    - template: src=template/pgpool_remote_start dest=/var/lib/pgsql/data/ mode=755 owner=postgres

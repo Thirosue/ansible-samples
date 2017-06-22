@@ -19,8 +19,12 @@ vagrant up --provider virtualbox
 ```
 $ git clone https://github.com/Thirosue/ansible-samples.git
 $ cd ansible-samples/postgres-streaming-replication/
-$ ansible-playbook -i hosts main.yml -vv
+$ ansible-playbook -i hosts postgres.yml -vv
 ```
+
+## ssh no password setting (pg1,pg2)
+
+master,slaveでsshパスワードなし設定
 
 ## pg1(host) with postgres(user)
 
@@ -171,4 +175,10 @@ test=# select count(1) from pgbench_accounts;
 --------
  100000
 (1 行)
+```
+
+## pg1(host) with vagrant(user)
+
+```
+$ ansible-playbook -i hosts pgpool.yml -vv
 ```
