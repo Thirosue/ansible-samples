@@ -28,5 +28,10 @@
     - file: path=/var/log/pgpool state=directory owner=postgres
     - file: path=/var/log/pgpool/trigger state=directory owner=postgres
 
-    - template: src=template/basebackup.sh dest=/var/lib/pgsql/data/ mode=755 owner=postgres
+    - template: src=template/basebackup.1.sh dest=/var/lib/pgsql/data/basebackup.sh mode=755 owner=postgres
+      when: target == 1
+
+    - template: src=template/basebackup.2.sh dest=/var/lib/pgsql/data/basebackup.sh mode=755 owner=postgres
+      when: target == 2
+
     - template: src=template/pgpool_remote_start dest=/var/lib/pgsql/data/ mode=755 owner=postgres

@@ -26,6 +26,9 @@ $ ansible-playbook -i hosts postgres.yml -vv
 
 master,slaveでsshパスワードなし設定
 
++ postgres@db1->postgres@db2
++ postgres@db2->postgres@db1
+
 ## pg1(host) with postgres(user)
 
 create repl user
@@ -64,9 +67,11 @@ $ mv bk /var/lib/pgsql/data/
 add replication conf
 
 ```
-$ echo 'standby_mode = on' >> /var/lib/pgsql/data/recovery.conf
-$ echo "primary_conninfo = 'host=192.168.202.1 port=5432 user=repl_user'" >> /var/lib/pgsql/data/recovery.conf
-$ echo "trigger_file = '/var/log/pgpool/trigger/trigger_file1'" >> /var/lib/pgsql/data/recovery.conf
+cat > /var/lib/pgsql/data/recovery.conf <<EOF
+standby_mode          = 'on'
+primary_conninfo      = 'host=192.168.202.1 port=5432 user=repl_user'
+trigger_file = '/var/log/pgpool/trigger/trigger_file1'
+EOF
 ```
 
 chmod
@@ -187,5 +192,5 @@ $ ansible-playbook -i hosts pgpool.yml -vv
 
 poolで以下sshパスワードなし設定
 
-+ pool->db1
-+ pool->db2
++ root@pool->postgres@db1
++ root@pool->postgres@db2
