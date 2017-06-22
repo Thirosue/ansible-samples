@@ -64,9 +64,9 @@ $ mv bk /var/lib/pgsql/data/
 add replication conf
 
 ```
-$ echo 'hot_standby = on' >> /var/lib/pgsql/data/postgresql.conf
 $ echo 'standby_mode = on' >> /var/lib/pgsql/data/recovery.conf
-$ echo "primary_conninfo = 'host=192.168.202.1 port=5432 user=repl_user application_name=192.168.202.2'" >> /var/lib/pgsql/data/recovery.conf
+$ echo "primary_conninfo = 'host=192.168.202.1 port=5432 user=repl_user'" >> /var/lib/pgsql/data/recovery.conf
+$ echo "trigger_file = '/var/log/pgpool/trigger/trigger_file1'" >> /var/lib/pgsql/data/recovery.conf
 ```
 
 chmod
@@ -182,3 +182,10 @@ test=# select count(1) from pgbench_accounts;
 ```
 $ ansible-playbook -i hosts pgpool.yml -vv
 ```
+
+## ssh no password setting (pool)
+
+poolで以下sshパスワードなし設定
+
++ pool->db1
++ pool->db2

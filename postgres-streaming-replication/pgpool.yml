@@ -8,6 +8,7 @@
 
     - yum: name={{item}} state=installed
       with_items:
+        - postgresql
         - pgpool-II-pg96
         - pgpool-II-pg96-extensions
 
@@ -17,6 +18,6 @@
 
     - systemd: name=pgpool enabled=yes masked=no
 
-    - copy: src=template/pgpool.conf dest=/etc/pgpool-II
+    - template: src=template/pgpool.conf dest=/etc/pgpool-II
     - copy: src=template/pcp.conf dest=/etc/pgpool-II
     - copy: src=template/failover.sh dest=/usr/local/etc/ mode=755
